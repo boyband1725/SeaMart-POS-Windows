@@ -53,7 +53,8 @@ create table if not exists public.sales (
   paid numeric(14,2) not null check (paid >= total),
   change_amount numeric(14,2) not null default 0 check (change_amount >= 0),
   created_at timestamptz not null default now(),
-  unique(store_id, receipt_no)
+  unique(store_id, receipt_no),
+  unique(store_id, id)
 );
 
 create table if not exists public.sale_items (
@@ -130,10 +131,16 @@ create policy "members manage products" on public.products for all to authentica
 using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
 create policy "members read sales" on public.sales for select to authenticated
 using (public.is_store_member(store_id));
+create policy "members insert sales" on public.sales for insert to authenticated
+with check (public.is_store_member(store_id) and cashier_id = auth.uid());
 create policy "members read sale items" on public.sale_items for select to authenticated
 using (public.is_store_member(store_id));
+create policy "members insert sale items" on public.sale_items for insert to authenticated
+with check (public.is_store_member(store_id));
 create policy "members read stock movements" on public.stock_movements for select to authenticated
 using (public.is_store_member(store_id));
+create policy "members insert stock movements" on public.stock_movements for insert to authenticated
+with check (public.is_store_member(store_id) and created_by = auth.uid());
 create policy "members manage cash entries" on public.cash_entries for all to authenticated
 using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
 
@@ -166,6 +173,10 @@ begin
   end if;
   if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
     raise exception 'Keranjang kosong';
+  end if;
+  if (select count(*) from jsonb_array_elements(p_items)) <>
+     (select count(distinct value->>'product_id') from jsonb_array_elements(p_items)) then
+    raise exception 'Barang yang sama terduplikasi di keranjang';
   end if;
 
   for v_item in select * from jsonb_array_elements(p_items) loop
