@@ -111,6 +111,16 @@ as $$
   );
 $$;
 
+create or replace function public.is_store_owner(p_store_id uuid)
+returns boolean language sql stable security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.store_members m
+    where m.store_id = p_store_id and m.user_id = auth.uid() and m.role = 'owner'
+  );
+$$;
+
 alter table public.stores enable row level security;
 alter table public.store_members enable row level security;
 alter table public.categories enable row level security;
@@ -120,18 +130,37 @@ alter table public.sale_items enable row level security;
 alter table public.stock_movements enable row level security;
 alter table public.cash_entries enable row level security;
 
+drop policy if exists "members read stores" on public.stores;
+drop policy if exists "members read membership" on public.store_members;
+drop policy if exists "members manage categories" on public.categories;
+drop policy if exists "members manage products" on public.products;
+drop policy if exists "members read sales" on public.sales;
+drop policy if exists "members insert sales" on public.sales;
+drop policy if exists "members read sale items" on public.sale_items;
+drop policy if exists "members insert sale items" on public.sale_items;
+drop policy if exists "members read stock movements" on public.stock_movements;
+drop policy if exists "members insert stock movements" on public.stock_movements;
+drop policy if exists "members manage cash entries" on public.cash_entries;
+
 create policy "members read stores" on public.stores for select to authenticated
 using (public.is_store_member(id));
 create policy "members read membership" on public.store_members for select to authenticated
-using (user_id = auth.uid() or public.is_store_member(store_id));
+using (user_id = auth.uid() or public.is_store_owner(store_id));
+create policy "owners manage membership" on public.store_members for all to authenticated
+using (public.is_store_owner(store_id)) with check (public.is_store_owner(store_id));
 
-create policy "members manage categories" on public.categories for all to authenticated
-using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
-create policy "members manage products" on public.products for all to authenticated
-using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+create policy "members read categories" on public.categories for select to authenticated
+using (public.is_store_member(store_id));
+create policy "owners manage categories" on public.categories for all to authenticated
+using (public.is_store_owner(store_id)) with check (public.is_store_owner(store_id));
+create policy "members read products" on public.products for select to authenticated
+using (public.is_store_member(store_id));
+create policy "owners manage products" on public.products for all to authenticated
+using (public.is_store_owner(store_id)) with check (public.is_store_owner(store_id));
+
 create policy "members read sales" on public.sales for select to authenticated
 using (public.is_store_member(store_id));
-create policy "members insert sales" on public.sales for insert to authenticated
+create policy "members insert own sales" on public.sales for insert to authenticated
 with check (public.is_store_member(store_id) and cashier_id = auth.uid());
 create policy "members read sale items" on public.sale_items for select to authenticated
 using (public.is_store_member(store_id));
@@ -141,8 +170,10 @@ create policy "members read stock movements" on public.stock_movements for selec
 using (public.is_store_member(store_id));
 create policy "members insert stock movements" on public.stock_movements for insert to authenticated
 with check (public.is_store_member(store_id) and created_by = auth.uid());
-create policy "members manage cash entries" on public.cash_entries for all to authenticated
-using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+create policy "members read cash entries" on public.cash_entries for select to authenticated
+using (public.is_store_member(store_id));
+create policy "owners manage cash entries" on public.cash_entries for all to authenticated
+using (public.is_store_owner(store_id)) with check (public.is_store_owner(store_id));
 
 -- Checkout is atomic: validate stock, create sale and lines, then reduce stock.
 create or replace function public.checkout_sale(
@@ -222,5 +253,5 @@ begin
 end;
 $$;
 
-grant execute on function public.is_store_member(uuid) to authenticated;
+grant execute on function public.is_store_member(uuid) to authenticated;\ngrant execute on function public.is_store_owner(uuid) to authenticated;
 grant execute on function public.checkout_sale(uuid,text,text,numeric,jsonb) to authenticated;
