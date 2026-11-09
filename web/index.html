@@ -93,6 +93,15 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 /* Ukuran tombol bayar lebih ringkas */
 .cashier-bill #checkout{min-height:44px!important;height:44px!important;padding:10px 14px!important;font-size:15px!important;line-height:1.2!important;margin:8px 0 10px!important}
 
+
+/* Navigasi utama dipindah ke atas dan berjajar horizontal */
+.layout{display:flex!important;flex-direction:column!important;min-height:calc(100vh - 68px)!important}
+.layout>aside{order:0!important;width:100%!important;padding:8px 14px!important;border-right:0!important;border-bottom:1px solid var(--line)!important;position:sticky!important;top:68px!important;z-index:5!important;overflow-x:auto!important;background:#fff!important}
+.layout>aside nav{display:flex!important;flex-direction:row!important;align-items:center!important;gap:7px!important;width:max-content!important;min-width:100%!important}
+.layout>aside nav button{flex:0 0 auto!important;white-space:nowrap!important;padding:10px 14px!important;text-align:center!important}
+.layout>main{order:1!important;width:100%!important;max-width:none!important;margin:0!important;padding:24px!important}
+@media(max-width:600px){.layout>aside{top:60px!important;padding:7px 8px!important}.layout>main{padding:14px 12px!important}.layout>aside nav button{padding:9px 11px!important;font-size:13px!important}}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
