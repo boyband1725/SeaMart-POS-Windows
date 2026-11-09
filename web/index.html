@@ -79,7 +79,7 @@ const $=id=>document.getElementById(id), rupiah=n=>'Rp'+Number(n||0).toLocaleStr
 function safeLoad(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[]}catch(e){console.warn('Data lokal tidak terbaca:',key,e);return []}}
 
 async function loadErgoMaster(){
- const version='ergo-master-2026-11-09';
+ const version='ergo-master-2026-11-09-rokok-aktif';
  if(localStorage.getItem('sm_master_version')===version&&Array.isArray(products)&&products.length>0){let changed=false;products.forEach(p=>{if(String(p.cat||'').trim()==='Cigarette'){p.cat='Rokok';changed=true}});if(changed){localStorage.setItem('sm_products',JSON.stringify(products));render()}return;}
  try{
   const response=await fetch('./master-barang-ergo.csv',{cache:'no-store'});
@@ -91,10 +91,12 @@ async function loadErgoMaster(){
   const get=(a,name)=>{let i=idx(name);return i<0?'':String(a[i]??'').trim()};
   const imported=lines.map(line=>{let a=parseLine(line);return {code:get(a,'kode'),name:get(a,'nama'),barcode:get(a,'barcode'),cost:Number(get(a,'harga_pokok'))||0,price:Number(get(a,'harga_jual'))||0,stock:0,cat:get(a,'kategori')||'Umum',active:get(a,'status').toLowerCase()!=='nonaktif'}}).filter(p=>p.name&&p.code);
   if(imported.length<2000)throw new Error('Jumlah master tidak sesuai: '+imported.length);
-  products=imported;
+  const oldProducts=products.slice();
+  const oldByKey=new Map(oldProducts.map(p=>[String(p.code||'')+'|'+String(p.barcode||''),p]));
+  const importedKeys=new Set(imported.map(p=>String(p.code||'')+'|'+String(p.barcode||'')));
+  products=imported.map(p=>{const old=oldByKey.get(String(p.code||'')+'|'+String(p.barcode||''));return old?{...p,stock:Number(old.stock||0)}:p;});
+  products.push(...oldProducts.filter(p=>!importedKeys.has(String(p.code||'')+'|'+String(p.barcode||''))));
   localStorage.setItem('sm_products',JSON.stringify(products));
-  localStorage.removeItem('sm_stock_movements');
-  localStorage.removeItem('sm_stock_opening');
   localStorage.setItem('sm_master_version',version);
   cart=[];
   render();
