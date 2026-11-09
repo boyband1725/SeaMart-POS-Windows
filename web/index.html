@@ -359,6 +359,26 @@ body{background:#f3f6f8}
 }
 
 
+/* Laptop and desktop cashier: keep products and order panel side by side.
+   The global navigation may collapse below 1100px, but the cashier must not. */
+@media(min-width:901px){
+  .cashier-layout{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(290px,320px)!important;
+    gap:16px!important;
+    align-items:start!important;
+  }
+  .cashier-layout>div:first-child{min-width:0!important}
+  .cashier-bill{
+    display:grid!important;
+    position:sticky!important;
+    top:84px!important;
+    align-self:start!important;
+    width:100%!important;
+    min-width:0!important;
+    order:initial!important;
+  }
+}
 /* Cashier bill composition: cart, total, side-by-side payment and cash fields */
 @media(min-width:901px){
  .cashier-bill{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-areas:
