@@ -305,6 +305,59 @@ body{background:#f3f6f8}
 @media(max-width:980px){.app-header{height:auto;min-height:78px;flex-wrap:wrap;justify-content:space-between}.app-header .brand{min-width:0}.app-header .logo{width:48px;height:48px;flex-basis:48px}.app-header .brand b{font-size:19px}.app-header .top-nav{order:3;flex-basis:100%;overflow-x:auto;justify-content:flex-start}.app-header .top-nav button{min-width:72px}.layout{min-height:calc(100vh - 125px)}.cashier-layout{grid-template-columns:minmax(0,1fr)!important}.cashier-products-area{grid-template-columns:180px minmax(0,1fr)!important}.cashier-bill{order:0}.cashier-layout>div:first-child{order:1}.cashier-product-panel .product-tiles{max-height:430px!important}}
 @media(max-width:620px){.app-header{padding:8px 10px;gap:5px}.app-header .brand{gap:8px}.app-header .logo{width:42px;height:42px;flex-basis:42px}.app-header .brand b{font-size:17px}.app-header .brand small{font-size:10px}.header-meta{gap:5px;font-size:10px}.header-meta #headerClock{display:none}.app-header .top-nav button{min-width:61px;font-size:18px}.app-header .top-nav button span{font-size:11px}.layout>main{padding:10px 8px}.cashier-layout{gap:10px!important}.cashier-products-area{grid-template-columns:1fr!important}.cashier-category-panel .chips{flex-direction:row!important;max-height:none!important;overflow-x:auto!important}.cashier-category-panel .chip{width:auto!important;white-space:nowrap!important}.cashier-product-panel .product-tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:440px!important}.cashier-bill .cart-table-head,.cashier-bill .cart-row{grid-template-columns:18px minmax(70px,1fr) 58px 82px 65px 22px!important;font-size:10px!important;gap:2px!important;padding:7px 2px!important}.cashier-actions{flex-wrap:wrap;padding:10px}.cashier-actions button{flex:1 1 28%;font-size:12px!important;min-width:0}.cashier-actions #checkout{flex-basis:100%;order:-1}.payment-choice{min-height:65px}}
 
+
+/* FIX: reference POS layout on normal laptop/desktop widths */
+@media (min-width:901px){
+  body>header.app-header{height:82px!important;min-height:82px!important;flex-wrap:nowrap!important;padding:7px 14px!important;gap:10px!important}
+  .app-header .brand{min-width:190px!important;flex:0 0 205px!important}
+  .app-header .logo{width:52px!important;height:52px!important;flex-basis:52px!important}
+  .app-header .brand b{font-size:21px!important}
+  .app-header .brand small{font-size:11px!important}
+  .app-header .top-nav{order:0!important;flex:1 1 auto!important;min-width:0!important;overflow:visible!important;justify-content:space-around!important;gap:2px!important}
+  .app-header .top-nav button{min-width:54px!important;padding:7px 5px!important;font-size:19px!important}
+  .app-header .top-nav button span{font-size:11px!important}
+  .header-meta{flex:0 0 auto!important;font-size:10px!important;gap:5px!important}
+  .header-meta #headerClock{display:none!important}
+  .layout>main{padding:12px!important}
+  .cashier-layout{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(405px,.95fr)!important;gap:10px!important;align-items:stretch!important}
+  .cashier-layout>div:first-child{min-width:0!important}
+  .cashier-products-area{grid-template-columns:clamp(150px,18vw,205px) minmax(0,1fr)!important;gap:9px!important;min-height:calc(100vh - 190px)!important}
+  .cashier-category-panel,.cashier-product-panel{min-width:0!important;padding:9px!important}
+  .cashier-category-panel .chips{max-height:calc(100vh - 285px)!important}
+  .cashier-product-panel .product-tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:calc(100vh - 205px)!important;overflow-y:auto!important;overflow-x:hidden!important;gap:8px!important}
+  .cashier-product-panel .product-tile{min-width:0!important;min-height:118px!important;padding:10px!important;overflow:hidden!important}
+  .cashier-product-panel .product-tile strong{display:inline-block!important;line-height:1.25!important;overflow-wrap:anywhere!important}
+  .cashier-product-panel .product-tile .price{display:block!important;margin-top:5px!important;white-space:normal!important}
+  .cashier-product-panel .tile-qty{gap:5px!important;margin-top:7px!important;padding-top:7px!important}
+  .cashier-product-panel .tile-qty button{width:32px!important;height:32px!important;flex:0 0 32px!important}
+  .cashier-bill{min-width:0!important;position:relative!important;top:auto!important;max-height:calc(100vh - 106px)!important;display:flex!important;flex-direction:column!important}
+  .cashier-bill #cartList{flex:1 1 auto!important;min-height:150px!important;max-height:calc(100vh - 430px)!important;overflow:auto!important}
+  .cashier-bill .cart-table-head,.cashier-bill .cart-row{grid-template-columns:24px minmax(85px,1.4fr) minmax(60px,.8fr) 94px minmax(70px,1fr) 24px!important;gap:4px!important;padding:8px 5px!important}
+  .cashier-bill .cart-name strong{overflow-wrap:anywhere!important}
+  .cashier-bill .bill-total{padding:9px 0!important}
+  .payment-choice{min-height:66px!important}
+  .cashier-actions{padding:9px!important;gap:6px!important}
+  .cashier-actions button{font-size:12px!important;padding:9px 7px!important;min-width:0!important}
+  .cashier-actions #checkout{font-size:13px!important}
+}
+@media (max-width:900px){
+  body>header.app-header{height:auto!important;min-height:76px!important;flex-wrap:wrap!important}
+  .app-header .top-nav{order:3!important;flex-basis:100%!important;overflow-x:auto!important;justify-content:flex-start!important}
+  .cashier-layout{grid-template-columns:minmax(0,1fr)!important}
+  .cashier-layout>.cashier-bill{order:0!important;position:static!important;max-height:none!important}
+  .cashier-layout>div:first-child{order:1!important}
+  .cashier-products-area{grid-template-columns:180px minmax(0,1fr)!important}
+  .cashier-product-panel .product-tiles{max-height:430px!important}
+}
+@media (max-width:620px){
+  .cashier-products-area{grid-template-columns:minmax(0,1fr)!important}
+  .cashier-category-panel .chips{flex-direction:row!important;max-height:none!important;overflow-x:auto!important}
+  .cashier-category-panel .chip{width:auto!important;white-space:nowrap!important}
+  .cashier-product-panel .product-tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:440px!important}
+  .cashier-actions{flex-wrap:wrap!important}
+  .cashier-actions #checkout{flex-basis:100%!important;order:-1!important}
+}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
