@@ -102,6 +102,16 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 .layout>main{order:1!important;width:100%!important;max-width:none!important;margin:0!important;padding:24px!important}
 @media(max-width:600px){.layout>aside{top:60px!important;padding:7px 8px!important}.layout>main{padding:14px 12px!important}.layout>aside nav button{padding:9px 11px!important;font-size:13px!important}}
 
+
+/* Paksa navigasi desktop menjadi baris horizontal di atas konten */
+@media(min-width:601px){
+ body .layout{display:block!important;min-height:calc(100vh - 68px)!important}
+ body .layout>aside{display:block!important;position:sticky!important;top:68px!important;width:100%!important;height:auto!important;padding:8px 16px!important;overflow-x:auto!important;overflow-y:hidden!important;border:0!important;border-bottom:1px solid var(--line)!important;background:#fff!important;z-index:10!important}
+ body .layout>aside nav{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:8px!important;width:max-content!important;min-width:100%!important}
+ body .layout>aside nav button{display:inline-flex!important;flex:0 0 auto!important;width:auto!important;white-space:nowrap!important;text-align:center!important}
+ body .layout>main{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:24px!important}
+}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
