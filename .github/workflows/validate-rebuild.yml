@@ -45,6 +45,52 @@ jobs:
           Path('/tmp/seamart-rebuild.js').write_text('\n'.join(scripts), encoding='utf-8')
           PY
           node --check /tmp/seamart-rebuild.js
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Run browser smoke tests
+        run: |
+          cat > /tmp/seamart-smoke.cjs <<'JS'
+          const { chromium } = require('playwright');
+          const { spawn } = require('child_process');
+          (async () => {
+            const server = spawn('python', ['-m', 'http.server', '4173', '--directory', 'web-v2'], { stdio: 'ignore' });
+            const browser = await chromium.launch({ headless: true });
+            try {
+              const page = await browser.newPage();
+              page.on('dialog', d => d.accept());
+              await page.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+              await page.waitForFunction(() => document.querySelector('#loadStatus')?.textContent.includes('barang termuat'));
+              const count = await page.locator('#tiles [data-add]').count();
+              if (!count) throw new Error('Katalog kasir kosong');
+              await page.locator('#tiles [data-add]').first().click();
+              await page.locator('#payMethod').selectOption('QRIS');
+              await page.locator('#checkout').click();
+              await page.waitForFunction(() => JSON.parse(localStorage.getItem('seamart_v2_sales') || '[]').length === 1);
+              await page.locator('[data-view="stock"]').click();
+              const product = page.locator('#issueProduct');
+              await page.waitForFunction(() => document.querySelectorAll('#issueProduct option').length > 1);
+              const productKey = await product.locator('option').nth(1).getAttribute('value');
+              await product.selectOption(productKey);
+              await page.locator('#issueQty').fill('1');
+              await page.locator('#issueReason').selectOption('Rusak');
+              await page.locator('#issueSubmit').click();
+              const moves = await page.evaluate(() => JSON.parse(localStorage.getItem('seamart_v2_stock_moves') || '[]'));
+              if (!moves.some(m => m.type === 'Keluar' && m.qty === 1)) throw new Error('Mutasi stok keluar tidak tersimpan');
+              const headers = await page.locator('#stock thead th').allTextContents();
+              if (!headers.includes('Barang keluar')) throw new Error('Kolom barang keluar tidak ditemukan');
+              await page.evaluate(() => { window.print = () => { window.__printCalled = true; }; });
+              await page.locator('#stockPdf').click();
+              if (!(await page.evaluate(() => window.__printCalled))) throw new Error('Tombol cetak PDF tidak memanggil print');
+              console.log('OK: master, kasir QRIS, riwayat penjualan, stok keluar, laporan, dan cetak siap');
+            } finally {
+              await browser.close();
+              server.kill();
+            }
+          })().catch(e => { console.error(e); process.exit(1); });
+          JS
+          node /tmp/seamart-smoke.cjs
       - name: Verify separate legacy app remains
         run: |
           test -f web/index.html
