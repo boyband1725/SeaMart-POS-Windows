@@ -29,6 +29,13 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 @media(max-width:900px){.cashier-layout{grid-template-columns:minmax(0,1fr)}.cashier-bill{position:static}.product-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.cashier-layout{grid-template-columns:minmax(0,1fr);gap:12px}.product-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.cashier-bill{padding:13px}.product-tile{min-width:0}.tile-qty{gap:5px}.tile-qty button{width:42px;height:42px;flex:0 0 42px}}
 @media(orientation:landscape) and (max-height:600px) and (min-width:601px){.cashier-layout{grid-template-columns:minmax(0,1fr) 290px}.product-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.cashier-bill{position:static}}
+
+/* Keep payment controls easy to find and use */
+.cashier-bill label.sub{display:block;margin-top:10px;font-size:13px;font-weight:700;color:#53645a}
+.cashier-bill #payment,.cashier-bill #paid{display:block;width:100%;min-height:48px;padding:12px 14px;font-size:16px;border:1px solid #cbd9d0;border-radius:10px;background:#fff;color:#17251d}
+.cashier-bill #paid{font-weight:700;letter-spacing:.2px}
+.cashier-bill #checkout{min-height:50px;font-size:16px;margin-top:4px}
+@media(max-width:900px){.cashier-layout{display:flex;flex-direction:column}.cashier-bill{order:0;width:100%}.cashier-layout>div:first-child{order:1;width:100%}.cashier-bill #paid,.cashier-bill #payment{font-size:16px}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">$</div><span>SeaMart <small style="font-size:12px;color:#7a8b80;font-weight:600">POS WEB</small></span></div><span class="tag">Pratinjau awal • Mode demo</span></header>
