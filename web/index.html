@@ -376,10 +376,10 @@ body{background:#f3f6f8}
  "actions actions"!important;align-content:start!important;gap:0 10px!important}
  .cashier-bill>.bill-head{grid-area:billhead!important}
  .cashier-bill>#cartList{grid-area:cart!important;width:100%!important}
- .cashier-bill>.bill-total:nth-of-type(1){grid-area:subtotal!important}
+ .cashier-bill>.bill-total:has(#subtotal){grid-area:subtotal!important}
  .cashier-bill>label:nth-of-type(1){grid-area:discountlabel!important}
  .cashier-bill>#discount{grid-area:discount!important}
- .cashier-bill>.bill-total:nth-of-type(2){grid-area:total!important;border-top:1px solid #e6ece8!important}
+ .cashier-bill>.bill-total:has(#total){grid-area:total!important;border-top:1px solid #e6ece8!important}
  .cashier-bill>label:nth-of-type(2){grid-area:paymentlabel!important}
  .cashier-bill>.payment-methods{grid-area:methods!important;grid-row:8 / span 4!important;align-self:stretch!important;margin:6px 0 10px 14px!important;grid-template-columns:1fr!important}
  .cashier-bill>#payment{display:none!important}
