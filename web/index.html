@@ -416,6 +416,31 @@ body{background:#f3f6f8}
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
+<script>
+/* Early login handler: keep sign-in usable even if a later POS module has a script error. */
+(function(){
+  document.addEventListener('submit',function(e){
+    if(!e.target || e.target.id!=='loginForm') return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var username=(document.getElementById('loginUsername').value||'').trim().toLowerCase();
+    var password=document.getElementById('loginPassword').value||'';
+    var role=username==='admin'&&password==='1'?'Admin':(username==='kasir'&&password==='1'?'Kasir':'');
+    var error=document.getElementById('loginError');
+    if(!role){if(error)error.textContent='Username atau password salah. Gunakan admin/1 atau kasir/1.';return;}
+    try{sessionStorage.setItem('sm_demo_session',JSON.stringify({username:username,role:role}));}catch(err){}
+    var screen=document.getElementById('loginScreen');if(screen)screen.hidden=true;
+    var logout=document.getElementById('logoutBtn');if(logout)logout.hidden=false;
+    var badge=document.getElementById('userBadge');if(badge)badge.textContent=username+' • '+role;
+    document.querySelectorAll('#nav [data-view]').forEach(function(b){b.hidden=role==='Kasir'&&b.dataset.view!=='kasir';});
+    if(role==='Kasir'){
+      document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id==='kasir');});
+      document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('active',b.dataset.view==='kasir');});
+    }
+    if(error)error.textContent='';
+  },true);
+})();
+</script>
 <header class="app-header"><div class="brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><span><b>SeaMart POS</b><small>Sistem Kasir Minimarket</small></span></div><nav id="nav" class="top-nav"><button class="active" data-view="kasir">🛒<span>Kasir</span></button><button data-view="barang">▣<span>Barang</span></button><button data-view="kategori">▧<span>Kategori</span></button><button data-view="stok">▱<span>Stok</span></button><button data-view="opname">▣<span>Opname</span></button><button data-view="kasbank">▤<span>Kas/Bank</span></button><button data-view="label">▤<span>Label</span></button><button data-view="laporan">▥<span>Laporan</span></button><button data-view="pengaturan">⚙<span>Pengaturan</span></button><button data-view="dashboard">▦<span>Dashboard</span></button></nav><div class="header-meta"><span id="headerClock">📅 <span id="headerDate"></span>　◷ <span id="headerTime"></span></span><span class="tag" id="userBadge">Belum login</span><button class="btn secondary" id="logoutBtn" type="button" hidden>Keluar</button></div></header>
 <div class="layout"><main>
 <section id="dashboard" class="view"><div class="heading"><div><h1>Dashboard</h1><div class="sub">Ringkasan aktivitas toko Anda</div></div><span class="tag" id="today"></span></div>
