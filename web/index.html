@@ -89,6 +89,10 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 .cashier-bill #discount,.cashier-bill #change{display:block;width:100%;min-height:48px;padding:12px 14px;font-size:16px;border:1px solid #cbd9d0;border-radius:10px}
 .cashier-bill #change{background:#f4f8f5;font-weight:800;color:var(--deep)}
 
+
+/* Ukuran tombol bayar lebih ringkas */
+.cashier-bill #checkout{min-height:44px!important;height:44px!important;padding:10px 14px!important;font-size:15px!important;line-height:1.2!important;margin:8px 0 10px!important}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
