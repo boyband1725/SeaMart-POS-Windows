@@ -358,6 +358,41 @@ body{background:#f3f6f8}
   .cashier-actions #checkout{flex-basis:100%!important;order:-1!important}
 }
 
+
+/* Cashier bill composition: cart, total, side-by-side payment and cash fields */
+@media(min-width:901px){
+ .cashier-bill{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-areas:
+ "billhead billhead"
+ "cart cart"
+ "subtotal subtotal"
+ "discountlabel discountlabel"
+ "discount discount"
+ "total total"
+ "paymentlabel paymentlabel"
+ "methods paidlabel"
+ "methods paid"
+ "methods changelabel"
+ "methods change"
+ "actions actions"!important;align-content:start!important;gap:0 10px!important}
+ .cashier-bill>.bill-head{grid-area:billhead!important}
+ .cashier-bill>#cartList{grid-area:cart!important;width:100%!important}
+ .cashier-bill>.bill-total:nth-of-type(1){grid-area:subtotal!important}
+ .cashier-bill>label:nth-of-type(1){grid-area:discountlabel!important}
+ .cashier-bill>#discount{grid-area:discount!important}
+ .cashier-bill>.bill-total:nth-of-type(2){grid-area:total!important;border-top:1px solid #e6ece8!important}
+ .cashier-bill>label:nth-of-type(2){grid-area:paymentlabel!important}
+ .cashier-bill>.payment-methods{grid-area:methods!important;grid-row:8 / span 4!important;align-self:stretch!important;margin:6px 0 10px 14px!important;grid-template-columns:1fr!important}
+ .cashier-bill>#payment{display:none!important}
+ .cashier-bill>label:nth-of-type(3){grid-area:paidlabel!important;margin:6px 14px 2px 0!important;width:auto!important}
+ .cashier-bill>#paid{grid-area:paid!important;margin:0 14px 7px 0!important;width:auto!important}
+ .cashier-bill>label:nth-of-type(4){grid-area:changelabel!important;margin:2px 14px 2px 0!important;width:auto!important}
+ .cashier-bill>#change{grid-area:change!important;margin:0 14px 10px 0!important;width:auto!important}
+ .cashier-bill>.cashier-actions{grid-area:actions!important}
+}
+@media(max-width:900px){
+ .cashier-bill{display:flex!important;flex-direction:column!important}
+}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
