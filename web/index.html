@@ -67,6 +67,11 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 @media(min-width:1200px){.cashier-layout{grid-template-columns:minmax(0,1.8fr) minmax(380px,1fr)!important}.cashier-layout .product-tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:900px){.cashier-layout{display:flex!important;flex-direction:column!important}.cashier-layout>.cashier-bill{order:0!important;position:static!important;width:100%!important}.cashier-layout>div:first-child{order:1!important;width:100%!important}.cashier-layout .product-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* Katalog kasir: tiga kartu produk sejajar per baris */
+.cashier-layout .product-tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+@media(max-width:700px){.cashier-layout .product-tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
