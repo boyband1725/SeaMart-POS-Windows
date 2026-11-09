@@ -459,6 +459,7 @@ const $=id=>document.getElementById(id), rupiah=n=>'Rp'+Number(n||0).toLocaleStr
 function safeLoad(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[]}catch(e){console.warn('Data lokal tidak terbaca:',key,e);return []}}
 
 async function loadErgoMaster(){
+ const loadingBox=$('productTiles');if(loadingBox&&products.length===0)loadingBox.innerHTML='<div class="empty">Sedang memuat master barang…</div>';
  const version='ergo-master-2026-11-09-rokok-aktif';
  if(localStorage.getItem('sm_master_version')===version&&Array.isArray(products)&&products.length>=2000){let changed=false;products.forEach(p=>{if(String(p.cat||'').trim()==='Cigarette'){p.cat='Rokok';changed=true}});if(changed){localStorage.setItem('sm_products',JSON.stringify(products));render()}return;}
  try{
@@ -483,7 +484,7 @@ async function loadErgoMaster(){
   refreshMoveForm();
   refreshStockForms();
   console.info('Master barang ERGO berhasil dimuat:',imported.length);
- }catch(err){console.error('Gagal memuat master barang ERGO:',err);const box=$('productTiles');if(box&&products.length===0)box.innerHTML='<div class="empty">Master barang belum berhasil dimuat. Periksa koneksi lalu muat ulang halaman. Detail: '+String(err.message||err)+'</div>';}
+ }catch(err){console.error('Gagal memuat master barang ERGO:',err);const box=$('productTiles');if(box&&products.length===0)box.innerHTML='<div class="empty">Master barang gagal dimuat: '+String(err.message||err).replace(/[<>&]/g,'')+'<br><button class="primary" type="button" onclick="loadErgoMaster()" style="margin-top:12px">Coba muat ulang barang</button></div>';}
 }
 
 let products=safeLoad('sm_products'),sales=safeLoad('sm_sales'),cashEntries=safeLoad('sm_cash_entries'),cashbook=safeLoad('sm_cashbook'),cashbookOpening={cash:0,bank:0,...(JSON.parse(localStorage.getItem('sm_cashbook_opening')||'{}'))},cart=[],activeCategory='Semua';if(!cashEntries.length&&sales.length){cashEntries=sales.map(t=>({date:t.date,id:t.id,method:t.method||'Tunai',amount:Number(t.total||0),note:'Penjualan'}));localStorage.setItem('sm_cash_entries',JSON.stringify(cashEntries))}const knownSaleIds=new Set(cashbook.filter(x=>x.source==='sale').map(x=>x.id));sales.filter(t=>t.status!=='cancelled'&&!knownSaleIds.has(t.id)).forEach(t=>{let day='';let m=String(t.date||'').match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/);if(m)day=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');else{let d=new Date(t.date);if(!Number.isNaN(d.getTime()))day=d.toISOString().slice(0,10)}cashbook.push({date:day||new Date().toISOString().slice(0,10),id:t.id,account:t.method==='QRIS'?'Bank':'Kas',type:'in',category:'Penjualan',note:'Penjualan '+(t.method||'Tunai'),amount:Number(t.total||0),source:'sale',status:'posted'})});if(cashbook.length)localStorage.setItem('sm_cashbook',JSON.stringify(cashbook));
@@ -637,6 +638,22 @@ $('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=
   #kasir .cashier-layout>.cashier-bill{position:static!important;order:0!important;width:100%!important;max-height:none!important}
   #kasir .cashier-layout>div:first-child{order:1!important;width:100%!important}
   #kasir .cashier-products-area{display:block!important}
+}
+
+/* Cashier layout refinement: enough room for the payment panel */
+@media (min-width:701px){
+ #kasir .cashier-layout{grid-template-columns:minmax(0,1fr) minmax(360px,40%)!important;gap:16px!important}
+ #kasir .cashier-layout>.cashier-bill{min-width:360px!important;padding:18px!important}
+ #kasir .cashier-products-area{grid-template-columns:155px minmax(0,1fr)!important}
+ #kasir .cashier-bill .payment-methods{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #kasir .cashier-bill .payment-choice{min-width:0!important;min-height:52px!important}
+ #kasir .cashier-bill .cashier-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #kasir .cashier-bill #checkout{grid-column:1/-1!important;width:100%!important;min-height:52px!important}
+}
+@media (max-width:700px){
+ #kasir .cashier-layout>.cashier-bill{min-width:0!important}
+ #kasir .cashier-bill .cashier-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #kasir .cashier-bill #checkout{grid-column:1/-1!important;width:100%!important}
 }
 </style></head><body>'+html+'</body></html>');w.document.close();w.focus();w.print()};
 
