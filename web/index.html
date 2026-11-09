@@ -126,6 +126,17 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 .cashier-bill #discount,.cashier-bill #change,.cashier-bill #payment,.cashier-bill #paid{min-height:40px!important;height:40px!important;padding:8px 10px!important;font-size:14px!important;margin:4px 0 8px!important}
 .cashier-bill #checkout{min-height:38px!important;height:38px!important;padding:8px 12px!important;font-size:14px!important;margin:6px 0 8px!important}
 
+
+/* Perbaikan ruang keranjang: jangan sisakan ruang kosong saat belum ada item */
+.cashier-bill #cartList{min-height:0!important;height:auto!important;max-height:210px!important;overflow-y:auto!important;padding:8px!important;margin:8px 0!important}
+.cashier-bill #cartList.empty{min-height:0!important;height:auto!important;padding:22px 10px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.cashier-bill{height:auto!important;max-height:calc(100vh - 150px)!important;overflow-y:auto!important;align-self:start!important}
+.cashier-bill .bill-head{position:sticky!important;top:0!important;background:inherit!important;z-index:2!important}
+.cashier-bill .bill-total{margin:5px 0!important;padding:7px 0!important}
+.cashier-bill label.sub{display:block!important;margin:5px 0 2px!important}
+.cashier-bill #discount,.cashier-bill #payment,.cashier-bill #paid,.cashier-bill #change{height:36px!important;min-height:36px!important;padding:6px 10px!important;margin:3px 0 6px!important;font-size:14px!important}
+.cashier-bill #checkout{height:40px!important;min-height:40px!important;margin:6px 0!important;padding:8px 12px!important}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
