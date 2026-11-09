@@ -164,6 +164,29 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
  .cashier-layout .product-tiles{grid-template-columns:1fr!important}
 }
 
+
+/* Tampilan keranjang versi 2: tabel ringkas dan area pembayaran horizontal */
+.cashier-bill{padding:0!important;overflow:hidden!important}
+.cashier-bill .bill-head{padding:14px 18px!important;background:var(--green)!important;color:#fff!important}
+.cashier-bill .bill-head .sub{color:#e5f5eb!important}
+.cashier-bill .bill-head .btn{background:#e7f5e9!important;color:#075b32!important;border:0!important}
+.cashier-bill #cartList{max-height:calc(100vh - 470px)!important;min-height:180px!important;overflow:auto!important;padding:0!important;margin:0!important}
+.cashier-bill .cart-table-head,.cashier-bill .cart-row{display:grid!important;grid-template-columns:34px minmax(120px,1.5fr) minmax(80px,.8fr) 112px minmax(90px,1fr) 28px!important;align-items:center!important;gap:8px!important;padding:9px 12px!important;border-bottom:1px solid var(--line)!important}
+.cashier-bill .cart-table-head{position:sticky;top:0;background:#f4f8f5;font-weight:800;font-size:12px!important}
+.cashier-bill .cart-row{font-size:13px!important}
+.cashier-bill .cart-name{min-width:0;display:flex;flex-direction:column;gap:2px}
+.cashier-bill .cart-name strong{font-size:13px!important;overflow-wrap:anywhere}
+.cashier-bill .cart-name small{color:var(--muted);font-size:11px}
+.cashier-bill .cart-price,.cashier-bill .cart-subtotal{text-align:right;white-space:nowrap}
+.cashier-bill .qty-tools{gap:4px!important;justify-content:center!important;white-space:nowrap}
+.cashier-bill .qty-tools button{width:24px!important;height:24px!important;padding:0!important}
+.cashier-bill .cart-remove{border:0;background:transparent;color:#c62828;font-size:20px;cursor:pointer}
+.cashier-bill>.bill-total,.cashier-bill>label,.cashier-bill>#discount,.cashier-bill>#payment,.cashier-bill>#paid,.cashier-bill>#change,.cashier-bill>#checkout{margin-left:16px!important;margin-right:16px!important;width:calc(100% - 32px)!important}
+.cashier-bill>.bill-total{padding:9px 0!important;margin-top:4px!important}
+.cashier-bill #discount,.cashier-bill #payment,.cashier-bill #paid,.cashier-bill #change{height:38px!important;min-height:38px!important;margin-top:4px!important;margin-bottom:8px!important}
+.cashier-bill #checkout{height:44px!important;min-height:44px!important;margin-bottom:14px!important}
+@media(max-width:900px){.cashier-bill .cart-table-head,.cashier-bill .cart-row{grid-template-columns:24px minmax(90px,1fr) 78px 96px 82px 24px!important;gap:4px!important;padding:8px 6px!important;font-size:11px!important}}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
@@ -231,8 +254,8 @@ $('toggleCategories').onclick=()=>{const panel=$('categoryChips'),open=panel.hid
 $('categoryChips').onclick=e=>{let b=e.target.closest('[data-cat]');if(b){activeCategory=b.dataset.cat;renderCashier()}};
 $('scan').oninput=()=>{if($('scan').value.trim())activeCategory='Semua';renderCashier()};
 $('clearCart').onclick=()=>{cart=[];renderCart()};
-function renderCart(){$('cartList').innerHTML=cart.length?cart.map((p,i)=>'<div class="cart-row"><span><strong>'+esc(p.name)+'</strong><br><small>'+rupiah(p.price)+' / pcs</small></span><span style="text-align:right"><b>'+rupiah(p.price*p.qty)+'</b><br><span class="qty-tools"><button data-dec="'+i+'">−</button>'+p.qty+'<button data-inc="'+i+'">+</button></span></span></div>').join(''):'<div class="empty">Keranjang masih kosong</div>';$('cartQty').textContent=cart.reduce((s,p)=>s+p.qty,0)+' item';const subtotal=cart.reduce((s,p)=>s+p.price*p.qty,0);$('subtotal').textContent=rupiah(subtotal);const discount=Math.min(subtotal,Math.max(0,Number($('discount')?.value||0)));const total=Math.max(0,subtotal-discount);$('total').textContent=rupiah(total);const paid=$('payment')?.value==='Tunai'?Number($('paid')?.value||0):total;if($('change'))$('change').value=rupiah(Math.max(0,paid-total));renderCashier()}
-$('cartList').onclick=e=>{let d=e.target.closest('[data-dec]'),u=e.target.closest('[data-inc]');if(d){let i=+d.dataset.dec;cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);renderCart()}if(u){let i=+u.dataset.inc,p=products.find(x=>x.code===cart[i].code&&x.barcode===cart[i].barcode);cart[i].qty++;renderCart()}};
+function renderCart(){$('cartList').innerHTML=cart.length?'<div class="cart-table-head"><span>No</span><span>Nama Barang</span><span>Harga</span><span>Qty</span><span>Subtotal</span><span></span></div>'+cart.map((p,i)=>'<div class="cart-row"><span class="cart-no">'+(i+1)+'</span><span class="cart-name"><strong>'+esc(p.name)+'</strong><small>'+esc(p.code||p.barcode||'')+'</small></span><span class="cart-price">'+rupiah(p.price)+'</span><span class="qty-tools"><button data-dec="'+i+'">−</button><b>'+p.qty+'</b><button data-inc="'+i+'">+</button></span><strong class="cart-subtotal">'+rupiah(p.price*p.qty)+'</strong><button class="cart-remove" data-remove="'+i+'" aria-label="Hapus '+esc(p.name)+'">×</button></div>').join(''):'<div class="empty">Keranjang masih kosong</div>';$('cartQty').textContent=cart.reduce((s,p)=>s+p.qty,0)+' item';const subtotal=cart.reduce((s,p)=>s+p.price*p.qty,0);$('subtotal').textContent=rupiah(subtotal);const discount=Math.min(subtotal,Math.max(0,Number($('discount')?.value||0)));const total=Math.max(0,subtotal-discount);$('total').textContent=rupiah(total);const paid=$('payment')?.value==='Tunai'?Number($('paid')?.value||0):total;if($('change'))$('change').value=rupiah(Math.max(0,paid-total));renderCashier()}
+$('cartList').onclick=e=>{let d=e.target.closest('[data-dec]'),u=e.target.closest('[data-inc]'),r=e.target.closest('[data-remove]');if(r){cart.splice(Number(r.dataset.remove),1);renderCart();return}if(d){let i=+d.dataset.dec;cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);renderCart()}if(u){let i=+u.dataset.inc;cart[i].qty++;renderCart()}};
 function stockKey(p){return String(p.code||p.barcode||p.name)}
 function ensureStockOpening(){let base;try{base=JSON.parse(localStorage.getItem('sm_stock_opening')||'null')}catch(e){base=null}if(!base){base={};products.forEach(p=>base[stockKey(p)]={qty:Number(p.stock||0),price:Number(p.price||0),name:p.name,code:p.code||''});localStorage.setItem('sm_stock_opening',JSON.stringify(base))}return base}
 function recordStockMove(p,qty,type,kind,note){if(!qty)return;let logs=safeLoad('sm_stock_movements');logs.push({key:stockKey(p),name:p.name,code:p.code||'',cat:p.cat||'Umum',unit:p.unit||'pcs',qty:Number(qty),type,kind:kind||'',note:note||'',price:Number(p.cost??p.price??0),date:Date.now()});localStorage.setItem('sm_stock_movements',JSON.stringify(logs))}
