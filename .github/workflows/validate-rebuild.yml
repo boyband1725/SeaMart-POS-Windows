@@ -1,0 +1,52 @@
+name: Validate SeaMart Rebuild
+on:
+  push:
+    branches: [seamart-rebuild]
+    paths:
+      - 'web-v2/**'
+      - '.github/workflows/validate-rebuild.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate master CSV structure and rows
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path('web-v2/master-barang-ergo.csv')
+          with p.open(encoding='utf-8-sig', newline='') as f:
+              rows = list(csv.DictReader(f))
+          expected = {'kode','nama','barcode','harga_pokok','harga_jual','stok','kategori','status'}
+          assert rows, 'CSV kosong'
+          assert expected.issubset(rows[0].keys()), f'Header tidak sesuai: {rows[0].keys()}'
+          valid = [r for r in rows if r.get('kode','').strip() and r.get('nama','').strip()]
+          assert len(valid) >= 2000, f'Barang valid kurang: {len(valid)}'
+          print(f'OK: {len(valid)} barang valid dari {len(rows)} baris data')
+          PY
+      - name: Validate application JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('web-v2/index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script>(.*?)</script>', html, flags=re.S)
+          assert scripts, 'Script aplikasi tidak ditemukan'
+          Path('/tmp/seamart-rebuild.js').write_text('\n'.join(scripts), encoding='utf-8')
+          PY
+          node --check /tmp/seamart-rebuild.js
+      - name: Verify separate legacy app remains
+        run: |
+          test -f web/index.html
+          test -f web/master-barang-ergo.csv
+          echo 'OK: aplikasi lama dan master CSV tetap ada'
