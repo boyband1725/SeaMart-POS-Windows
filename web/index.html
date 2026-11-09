@@ -80,7 +80,7 @@ function safeLoad(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]
 
 async function loadErgoMaster(){
  const version='ergo-master-2026-11-09';
- if(localStorage.getItem('sm_master_version')===version)return;
+ if(localStorage.getItem('sm_master_version')===version&&Array.isArray(products)&&products.length>0)return;
  try{
   const response=await fetch('./master-barang-ergo.csv',{cache:'no-store'});
   if(!response.ok)throw new Error('CSV master tidak ditemukan: '+response.status);
