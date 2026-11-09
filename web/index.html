@@ -142,6 +142,28 @@ button.primary,.btn{border:0;background:var(--green);color:white;padding:11px 15
 .product-tile[role="button"]{cursor:pointer}
 .product-tile[role="button"]:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 
+
+/* Layout kasir: daftar produk satu kolom memanjang, keranjang lebih lebar */
+@media(min-width:601px){
+ .cashier-layout{grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr)!important;gap:18px!important;align-items:stretch!important}
+ .cashier-layout> :first-child{min-width:0!important}
+ .cashier-layout .product-tiles{grid-template-columns:minmax(0,1fr)!important;gap:8px!important;max-height:calc(100vh - 330px)!important;overflow-y:auto!important;padding:4px 8px 8px 2px!important}
+ .cashier-layout .product-tile{min-height:78px!important;height:auto!important;padding:10px 14px!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;align-items:center!important;gap:5px 12px!important}
+ .cashier-layout .product-tile>span:first-child{grid-column:1;grid-row:1}
+ .cashier-layout .product-tile>.price{grid-column:1;grid-row:2;margin:0!important}
+ .cashier-layout .product-tile .tile-qty{grid-column:2;grid-row:1 / span 2;margin:0!important;padding:0!important;border:0!important;min-width:150px!important}
+ .cashier-layout .cashier-bill{width:100%!important;min-width:0!important;position:sticky!important;top:145px!important;max-height:calc(100vh - 165px)!important;overflow-y:auto!important}
+ .cashier-layout .cashier-bill #cartList{max-height:calc(100vh - 460px)!important;min-height:180px!important}
+}
+@media(min-width:601px) and (max-width:1100px){
+ .cashier-layout{grid-template-columns:minmax(0,1fr) minmax(350px,.9fr)!important}
+ .cashier-layout .product-tile .tile-qty{min-width:125px!important}
+}
+@media(max-width:600px){
+ .cashier-layout{grid-template-columns:1fr!important}
+ .cashier-layout .product-tiles{grid-template-columns:1fr!important}
+}
+
 </style></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
