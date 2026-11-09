@@ -605,6 +605,39 @@ $('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=
   #kasir .cashier-layout>div:first-child{order:1!important;width:100%!important}
   #kasir .cashier-products-area{display:block!important}
 }
+
+/* LIVE DESKTOP CASHIER GRID FIX */
+/* This rule belongs to the page stylesheet (not the receipt-print template). */
+@media (min-width:701px){
+  #kasir .cashier-layout{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(320px,42%)!important;
+    align-items:start!important;
+    gap:14px!important;
+  }
+  #kasir .cashier-layout>div:first-child{
+    display:flex!important;flex-direction:column!important;
+    grid-column:1!important;grid-row:1!important;
+    order:0!important;width:100%!important;min-width:0!important;
+  }
+  #kasir .cashier-layout>.cashier-bill{
+    display:flex!important;flex-direction:column!important;
+    grid-column:2!important;grid-row:1!important;
+    order:0!important;width:100%!important;min-width:0!important;
+    position:sticky!important;top:125px!important;
+    max-height:calc(100vh - 145px)!important;overflow-y:auto!important;
+  }
+  #kasir .cashier-products-area{
+    display:grid!important;grid-template-columns:150px minmax(0,1fr)!important;
+    gap:10px!important;min-width:0!important;
+  }
+}
+@media (max-width:700px){
+  #kasir .cashier-layout{display:flex!important;flex-direction:column!important}
+  #kasir .cashier-layout>.cashier-bill{position:static!important;order:0!important;width:100%!important;max-height:none!important}
+  #kasir .cashier-layout>div:first-child{order:1!important;width:100%!important}
+  #kasir .cashier-products-area{display:block!important}
+}
 </style></head><body>'+html+'</body></html>');w.document.close();w.focus();w.print()};
 
 // Demo login handlers
