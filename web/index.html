@@ -541,7 +541,46 @@ $('opProcessBtn').onclick=()=>{let draft=JSON.parse(localStorage.getItem('sm_opn
 $('opUndoBtn').onclick=()=>{let batches=safeLoad('sm_opname_batches');if(!batches.length)return alert('Belum ada proses opname yang bisa dibatalkan');let batch=batches.pop();for(const item of batch.items){let p=products[item.index];if(p)p.stock=Number(item.system)}localStorage.setItem('sm_opname_batches',JSON.stringify(batches));let logs=safeLoad('sm_opname'),undoDate=new Date().toLocaleString('id-ID');localStorage.setItem('sm_opname',JSON.stringify([...logs,{date:undoDate,code:'',barcode:'',name:'PEMBATALAN PROSES: '+batch.items.length+' barang',system:'—',count:'—',diff:'—',note:'Stok dikembalikan ke sebelum proses '+batch.date}]));localStorage.removeItem('sm_opname_draft');opnameEditMode=false;persist();refreshStockForms();alert('Proses opname terakhir dibatalkan. Stok sistem dikembalikan.')};
 function renderLabelPreview(){let p=products[Number($('labelProduct').value)];$('labelPreview').innerHTML=p?'<div class="price-label"><b>SeaMart</b><div>'+esc(p.name)+'</div><strong>'+rupiah(p.price)+'</strong><small>'+esc(p.barcode||p.code||'')+'</small></div>':''}
 $('labelProduct').onchange=renderLabelPreview;
-$('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=Math.max(1,Math.min(100,Number($('labelQty').value)||1));if(!p)return alert('Pilih barang');let html=Array.from({length:n},()=>'<div class="price-label"><b>SeaMart</b><div>'+esc(p.name)+'</div><strong>'+rupiah(p.price)+'</strong><small>'+esc(p.barcode||p.code||'')+'</small></div>').join('');let w=window.open('','_blank','width=600,height=700');if(!w)return alert('Izinkan pop-up untuk mencetak label');w.document.write('<!doctype html><html><head><title>Label Harga</title><style>@page{margin:5mm}body{font:12px Arial;display:flex;flex-wrap:wrap;gap:4mm}.price-label{width:48mm;min-height:25mm;border:1px dashed #777;padding:3mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;break-inside:avoid}.price-label strong{font-size:18px;margin:3px}.price-label small{font-size:9px}</style></head><body>'+html+'</body></html>');w.document.close();w.focus();w.print()};
+$('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=Math.max(1,Math.min(100,Number($('labelQty').value)||1));if(!p)return alert('Pilih barang');let html=Array.from({length:n},()=>'<div class="price-label"><b>SeaMart</b><div>'+esc(p.name)+'</div><strong>'+rupiah(p.price)+'</strong><small>'+esc(p.barcode||p.code||'')+'</small></div>').join('');let w=window.open('','_blank','width=600,height=700');if(!w)return alert('Izinkan pop-up untuk mencetak label');w.document.write('<!doctype html><html><head><title>Label Harga</title><style>@page{margin:5mm}body{font:12px Arial;display:flex;flex-wrap:wrap;gap:4mm}.price-label{width:48mm;min-height:25mm;border:1px dashed #777;padding:3mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;break-inside:avoid}.price-label strong{font-size:18px;margin:3px}.price-label small{font-size:9px}
+/* FINAL FIX: desktop cashier stays in two columns even at browser zoom.
+   Only narrow phone-sized viewports stack the order panel. */
+@media (min-width:701px){
+  #kasir .cashier-layout{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(320px,42%)!important;
+    gap:12px!important;
+    align-items:start!important;
+  }
+  #kasir .cashier-layout>div:first-child{
+    display:flex!important;flex-direction:column!important;
+    order:0!important;grid-column:1!important;
+    width:100%!important;min-width:0!important;
+  }
+  #kasir .cashier-layout>.cashier-bill{
+    display:flex!important;flex-direction:column!important;
+    order:0!important;grid-column:2!important;
+    grid-row:1!important;width:100%!important;
+    min-width:0!important;max-width:none!important;
+    position:sticky!important;top:125px!important;
+    max-height:calc(100vh - 145px)!important;overflow-y:auto!important;
+  }
+  #kasir .cashier-products-area{
+    display:grid!important;grid-template-columns:150px minmax(0,1fr)!important;
+    gap:10px!important;min-width:0!important;
+  }
+  #kasir .cashier-products-area>*{min-width:0!important}
+  #kasir .cashier-product-panel .product-tiles{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    max-height:calc(100vh - 300px)!important;overflow:auto!important;
+  }
+}
+@media (max-width:700px){
+  #kasir .cashier-layout{display:flex!important;flex-direction:column!important}
+  #kasir .cashier-layout>.cashier-bill{order:0!important;position:static!important;width:100%!important;max-height:none!important}
+  #kasir .cashier-layout>div:first-child{order:1!important;width:100%!important}
+  #kasir .cashier-products-area{display:block!important}
+}
+</style></head><body>'+html+'</body></html>');w.document.close();w.focus();w.print()};
 
 // Demo login handlers
 const demoUsers=[{username:'admin',password:'1',role:'Admin'},{username:'kasir',password:'1',role:'Kasir'}];
