@@ -26,7 +26,36 @@
       if(location.hash.includes('type=recovery'))setTimeout(showPasswordRecovery,400);
     }catch(error){console.warn('Supabase recovery init:',error);}
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRecovery);else initRecovery();
+  function installForgotPassword(){
+    const emailInput=document.getElementById('loginUsername');
+    const passwordLabel=document.getElementById('loginPassword')?.closest('label');
+    if(!emailInput||!passwordLabel||document.getElementById('forgotPasswordButton'))return;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;justify-content:flex-end;margin:-5px 0 8px';
+    const button=document.createElement('button');
+    button.id='forgotPasswordButton';button.type='button';button.textContent='Lupa Password?';
+    button.style.cssText='width:auto;min-height:34px;margin:0;padding:4px 2px;background:transparent;border:0;color:#087a48;font-weight:700;cursor:pointer';
+    row.appendChild(button);passwordLabel.insertAdjacentElement('afterend',row);
+    button.addEventListener('click',async()=>{
+      const email=String(emailInput.value||'').trim();
+      const errorBox=document.getElementById('loginError');
+      if(!email){if(errorBox)errorBox.textContent='Masukkan email akun SeaMart terlebih dahulu.';emailInput.focus();return;}
+      button.disabled=true;button.textContent='Mengirim link…';if(errorBox)errorBox.textContent='';
+      try{
+        const result=await db().auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+        if(result.error)throw result.error;
+        if(errorBox)errorBox.textContent='Jika email terdaftar, link reset akan dikirim. Periksa Inbox dan Spam.';
+        button.textContent='Link reset diminta';
+      }catch(error){
+        if(errorBox)errorBox.textContent=error.message||'Gagal mengirim link reset password. Coba lagi nanti.';
+        button.disabled=false;button.textContent='Lupa Password?';
+      }
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',()=>{initRecovery();installForgotPassword();});
+  }else{initRecovery();installForgotPassword();}
+
 
   function initForgotPassword(){
     const btn=document.getElementById('forgotPasswordBtn');
