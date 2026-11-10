@@ -5,6 +5,28 @@
   let client=null, storeId=null, syncTimer=null, syncing=false;
   function db(){ if(!window.supabase) throw new Error('Library Supabase belum termuat. Periksa koneksi internet.'); if(!client) client=window.supabase.createClient(URL,KEY); return client; }
   function setStatus(message){ let el=document.getElementById('cloudStatus'); if(el) el.textContent=message; }
+  function showPasswordRecovery(){
+    const card=document.querySelector('.login-card');
+    if(!card||document.getElementById('recoveryForm'))return;
+    card.innerHTML='<div class="login-brand"><div><h1>Atur Password Baru</h1><div class="sub">Buat password baru untuk akun SeaMart</div></div></div><form id="recoveryForm"><label>Password baru<input id="newPassword" type="password" minlength="8" required autocomplete="new-password"></label><label>Ulangi password<input id="confirmPassword" type="password" minlength="8" required autocomplete="new-password"></label><div id="recoveryError" role="alert" style="color:#b42318;margin:10px 0"></div><button class="primary" type="submit">Simpan Password Baru</button></form>';
+    document.getElementById('recoveryForm').addEventListener('submit',async function(e){
+      e.preventDefault();
+      const p=document.getElementById('newPassword').value, c=document.getElementById('confirmPassword').value, err=document.getElementById('recoveryError');
+      if(p!==c){err.textContent='Password tidak sama.';return;}
+      if(p.length<8){err.textContent='Password minimal 8 karakter.';return;}
+      const btn=this.querySelector('button');btn.disabled=true;btn.textContent='Menyimpan…';err.textContent='';
+      try{const result=await db().auth.updateUser({password:p});if(result.error)throw result.error;card.innerHTML='<h2>Password berhasil diperbarui</h2><p>Silakan kembali ke halaman SeaMart dan login menggunakan password baru.</p><button class="primary" type="button" onclick="location.href=location.pathname">Kembali ke Login</button>';}
+      catch(error){err.textContent=error.message||'Gagal memperbarui password.';btn.disabled=false;btn.textContent='Simpan Password Baru';}
+    });
+  }
+  function initRecovery(){
+    try{
+      const sb=db();
+      sb.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')showPasswordRecovery();});
+      if(location.hash.includes('type=recovery'))setTimeout(showPasswordRecovery,400);
+    }catch(error){console.warn('Supabase recovery init:',error);}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRecovery);else initRecovery();
   async function loadProducts(){
     if(!storeId) return;
     const sb=db();
