@@ -413,34 +413,37 @@ body{background:#f3f6f8}
  .cashier-bill{display:flex!important;flex-direction:column!important}
 }
 
-</style></head>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
-<div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Username<input id="loginUsername" autocomplete="username" placeholder="Masukkan username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help"><b>Akun demo untuk mencoba:</b><br>Admin: <b>admin</b> / <b>1</b><br>Kasir: <b>kasir</b> / <b>1</b><br><br>Ini login percobaan lokal, belum aman untuk data toko sungguhan.</div></form></div>
+<div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label><div class="login-error" id="loginError" role="alert"></div><button class="primary" type="submit">Masuk</button><div class="login-help">Masuk menggunakan email dan password akun pemilik yang sudah dibuat di Supabase. Data barang akan dimuat dari database online.</div><div id="cloudStatus" class="sub" style="margin-top:10px">Belum terhubung</div></form></div>
 <script>
-/* Early login handler: keep sign-in usable even if a later POS module has a script error. */
+/* Cloud login handler */
 (function(){
-  document.addEventListener('submit',function(e){
-    if(!e.target || e.target.id!=='loginForm') return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    var username=(document.getElementById('loginUsername').value||'').trim().toLowerCase();
-    var password=document.getElementById('loginPassword').value||'';
-    var role=username==='admin'&&password==='1'?'Admin':(username==='kasir'&&password==='1'?'Kasir':'');
-    var error=document.getElementById('loginError');
-    if(!role){if(error)error.textContent='Username atau password salah. Gunakan admin/1 atau kasir/1.';return;}
-    try{sessionStorage.setItem('sm_demo_session',JSON.stringify({username:username,role:role}));}catch(err){}
-    var screen=document.getElementById('loginScreen');if(screen)screen.hidden=true;
-    var logout=document.getElementById('logoutBtn');if(logout)logout.hidden=false;
-    var badge=document.getElementById('userBadge');if(badge)badge.textContent=username+' • '+role;
-    document.querySelectorAll('#nav [data-view]').forEach(function(b){b.hidden=role==='Kasir'&&b.dataset.view!=='kasir';});
-    if(role==='Kasir'){
-      document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id==='kasir');});
-      document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('active',b.dataset.view==='kasir');});
-    }
-    if(error)error.textContent='';
-  },true);
+ document.addEventListener('submit',async function(e){
+  if(!e.target||e.target.id!=='loginForm')return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const email=(document.getElementById('loginUsername').value||'').trim();
+  const password=document.getElementById('loginPassword').value||'';
+  const error=document.getElementById('loginError');
+  const button=e.target.querySelector('button[type="submit"]');
+  if(button){button.disabled=true;button.textContent='Menghubungkan…';}
+  if(error)error.textContent='';
+  try{
+   if(typeof window.seamartCloudLogin!=='function')throw new Error('Koneksi Supabase belum siap. Muat ulang halaman.');
+   const user=await window.seamartCloudLogin(email,password);
+   const screen=document.getElementById('loginScreen');if(screen)screen.hidden=true;
+   const logout=document.getElementById('logoutBtn');if(logout)logout.hidden=false;
+   const badge=document.getElementById('userBadge');if(badge)badge.textContent=email+' • '+user.role;
+   document.querySelectorAll('#nav [data-view]').forEach(b=>{b.hidden=user.role==='Kasir'&&b.dataset.view!=='kasir';});
+   if(user.role==='Kasir'){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='kasir'));
+    document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view==='kasir'));
+   }
+  }catch(err){if(error)error.textContent=err.message||'Login gagal. Periksa email, password, dan koneksi.';}
+  finally{if(button){button.disabled=false;button.textContent='Masuk';}}
+ },true);
 })();
-</script>
+
 <header class="app-header"><div class="brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><span><b>SeaMart POS</b><small>Sistem Kasir Minimarket</small></span></div><nav id="nav" class="top-nav"><button class="active" data-view="kasir">🛒<span>Kasir</span></button><button data-view="barang">▣<span>Barang</span></button><button data-view="kategori">▧<span>Kategori</span></button><button data-view="stok">▱<span>Stok</span></button><button data-view="opname">▣<span>Opname</span></button><button data-view="kasbank">▤<span>Kas/Bank</span></button><button data-view="label">▤<span>Label</span></button><button data-view="laporan">▥<span>Laporan</span></button><button data-view="tutupkasir">▣<span>Tutup Kasir</span></button><button data-view="pengaturan">⚙<span>Pengaturan</span></button><button data-view="dashboard">▦<span>Dashboard</span></button></nav><div class="header-meta"><span id="headerClock">📅 <span id="headerDate"></span>　◷ <span id="headerTime"></span></span><span class="tag" id="userBadge">Belum login</span><button class="btn secondary" id="logoutBtn" type="button" hidden>Keluar</button></div></header>
 <div class="layout"><main>
 <section id="dashboard" class="view"><div class="heading"><div><h1>Dashboard</h1><div class="sub">Ringkasan aktivitas toko Anda</div></div><span class="tag" id="today"></span></div>
@@ -513,10 +516,11 @@ async function loadErgoMaster(){
 }
 
 let products=safeLoad('sm_products'),sales=safeLoad('sm_sales'),cashEntries=safeLoad('sm_cash_entries'),cashbook=safeLoad('sm_cashbook'),cashbookOpening={cash:0,bank:0,...(()=>{try{return JSON.parse(localStorage.getItem('sm_cashbook_opening')||'{}')||{}}catch(e){console.warn('Saldo awal kas/bank lokal rusak, memakai nol sementara',e);return {}}})()},cart=[],activeCategory='Semua';
+Object.defineProperty(window,'products',{configurable:true,get:()=>products,set:value=>{products=value;}});
 // Start master loading immediately after product state is initialized, before optional forms can fail.
 loadErgoMaster();if(!cashEntries.length&&sales.length){cashEntries=sales.map(t=>({date:t.date,id:t.id,method:t.method||'Tunai',amount:Number(t.total||0),note:'Penjualan'}));localStorage.setItem('sm_cash_entries',JSON.stringify(cashEntries))}const knownSaleIds=new Set(cashbook.filter(x=>x.source==='sale').map(x=>x.id));sales.filter(t=>t.status!=='cancelled'&&!knownSaleIds.has(t.id)).forEach(t=>{let day='';let m=String(t.date||'').match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/);if(m)day=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');else{let d=new Date(t.date);if(!Number.isNaN(d.getTime()))day=d.toISOString().slice(0,10)}cashbook.push({date:day||new Date().toISOString().slice(0,10),id:t.id,account:t.method==='QRIS'?'Bank':'Kas',type:'in',category:'Penjualan',note:'Penjualan '+(t.method||'Tunai'),amount:Number(t.total||0),source:'sale',status:'posted'})});if(cashbook.length)localStorage.setItem('sm_cashbook',JSON.stringify(cashbook));
 $('today').textContent=new Date().toLocaleDateString('id-ID',{dateStyle:'full'});
-function persist(){localStorage.setItem('sm_products',JSON.stringify(products));render()}
+function persist(){localStorage.setItem('sm_products',JSON.stringify(products));render();if(window.seamartScheduleProductSync)window.seamartScheduleProductSync()}
 function renderCategorySummary(){if(!$('categoryRows'))return;let groups={};products.forEach(p=>{let name=String(p.cat||'Umum').trim()||'Umum';groups[name]=(groups[name]||0)+1});let rows=Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0],'id'));$('categoryRows').innerHTML=rows.map(([name,count],i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(name)+'</td><td class="num">'+count.toLocaleString('id-ID')+'</td></tr>').join('')||'<tr><td colspan="3" class="empty">Belum ada kelompok barang</td></tr>'}function render(){let q=($('search')?.value||'').toLowerCase();$('productRows').innerHTML=products.map((p,i)=>({p,i})).filter(({p})=>{let f=$('productStatusFilter')?.value||'Aktif';return (f==='Semua'||(f==='Aktif'&&p.active!==false)||(f==='Nonaktif'&&p.active===false))&&(p.name+' '+p.barcode+' '+p.code).toLowerCase().includes(q)}).map(({p,i})=>'<tr data-product-row="'+i+'"><td>'+esc(p.name)+'</td><td>'+esc(p.code)+'</td><td>'+esc(p.barcode)+'</td><td class="num">'+rupiah(p.price)+'</td><td class="num">'+p.stock+'</td><td>'+esc(p.cat)+'</td><td><span class="tag">'+(p.active===false?'Nonaktif':'Aktif')+'</span> <button class="btn secondary" data-toggle-active="'+i+'">'+(p.active===false?'Aktifkan':'Nonaktifkan')+'</button></td><td><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn secondary" data-stock-dec="'+i+'">−</button><button class="primary" data-stock-inc="'+i+'">+</button></div></td></tr>').join('')||'<tr><td colspan="7" class="empty">Belum ada barang</td></tr>';$('items').textContent=products.length;$('low').textContent=products.filter(p=>p.stock<=5).length;renderCart();renderCashier();renderCategorySummary();renderReport()}
 function renderCashier(){if(!$('productTiles'))return;let activeProducts=products.filter(p=>p.active!==false),q=$('scan').value.trim().toLowerCase(),defaultCats=['Air Mineral','Minuman','Makanan','Makanan Ringan','Mie Instan','Es Krim','Frozen Food','Snack','Sembako','Perlengkapan Rumah','Rokok','Umum'],productCats=[...new Set(activeProducts.map(p=>String(p.cat||'Umum').trim()).filter(Boolean))],cats=['Semua',...defaultCats,...productCats.filter(c=>!defaultCats.some(d=>d.toLocaleLowerCase('id-ID')===c.toLocaleLowerCase('id-ID')))];if(!cats.includes(activeCategory))activeCategory='Semua';$('cashierCount').textContent=activeProducts.length.toLocaleString('id-ID')+' produk aktif';$('categoryChips').innerHTML=cats.map(c=>'<button class="chip '+(activeCategory===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');let shown=activeProducts.filter(p=>(activeCategory==='Semua'||(p.cat||'Umum')===activeCategory)&&(!q||[p.name,p.barcode,p.code].some(v=>String(v??'').trim().toLowerCase().includes(q))));$('productTiles').innerHTML=shown.map(p=>'<div class="product-tile" role="button" tabindex="0" aria-label="Tambah '+esc(p.name)+' ke keranjang" onclick="window.seamartQty('+products.indexOf(p)+',1)" onkeydown="if(event.key===String.fromCharCode(13)||event.key===String.fromCharCode(32)){event.preventDefault();window.seamartQty('+products.indexOf(p)+',1)}"><span><strong>'+esc(p.name)+'</strong><br><small>'+esc(p.code||p.barcode||'')+'</small></span><span class="price">'+rupiah(p.price)+' <small>• stok '+p.stock+'</small></span><div class="tile-qty"><span class="qty-label">Jumlah</span><button type="button" aria-label="Kurangi '+esc(p.name)+'" onclick="event.stopPropagation();window.seamartQty('+products.indexOf(p)+',-1)" '+(!((cart.find(c=>c.code===p.code&&c.barcode===p.barcode)||{}).qty)?'disabled':'')+'>−</button><b>'+((cart.find(c=>c.code===p.code&&c.barcode===p.barcode)||{}).qty||0)+'</b><button type="button" aria-label="Tambah '+esc(p.name)+'" onclick="event.stopPropagation();window.seamartQty('+products.indexOf(p)+',1)" >+</button></div></div>').join('')||'<div class="empty">Produk tidak ditemukan. Impor CSV melalui menu Data Barang.</div>'}
 function addProductToCart(p){if(!p)return;let c=cart.find(x=>x.code===p.code&&x.barcode===p.barcode);if(c)c.qty++;else cart.push({...p,qty:1});renderCart()}
@@ -600,7 +604,7 @@ $('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=
 const demoUsers=[{username:'admin',password:'1',role:'Admin'},{username:'kasir',password:'1',role:'Kasir'}];
 function applyLocalSession(){let u=null;try{u=JSON.parse(sessionStorage.getItem('sm_demo_session')||'null')}catch(e){};if(!u){$('loginScreen').hidden=false;$('logoutBtn').hidden=true;$('userBadge').textContent='Belum login';return} $('loginScreen').hidden=true;$('logoutBtn').hidden=false;$('userBadge').textContent=u.username+' • '+u.role;document.querySelectorAll('#nav [data-view]').forEach(b=>b.hidden=u.role==='Kasir'&&b.dataset.view!=='kasir');if(u.role==='Kasir'){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='kasir'));document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view==='kasir'))}}
 $('loginForm').addEventListener('submit',e=>{e.preventDefault();const username=$('loginUsername').value.trim().toLowerCase(),password=$('loginPassword').value;const u=demoUsers.find(x=>x.username===username&&x.password===password);if(!u){$('loginError').textContent='Username atau password salah.';return}sessionStorage.setItem('sm_demo_session',JSON.stringify({username:u.username,role:u.role}));$('loginError').textContent='';applyLocalSession()});
-$('logoutBtn').onclick=()=>{sessionStorage.removeItem('sm_demo_session');cart=[];renderCart();applyLocalSession()};
+$('logoutBtn').onclick=()=>{if(window.seamartCloudSignOut)window.seamartCloudSignOut();sessionStorage.removeItem('sm_demo_session');cart=[];renderCart();applyLocalSession()};
 applyLocalSession();
 refreshStockForms();
 refreshMoveForm();
