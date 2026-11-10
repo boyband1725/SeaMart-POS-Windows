@@ -27,6 +27,27 @@
     }catch(error){console.warn('Supabase recovery init:',error);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRecovery);else initRecovery();
+
+  function initForgotPassword(){
+    const btn=document.getElementById('forgotPasswordBtn');
+    if(!btn || btn.dataset.ready==='1') return;
+    btn.dataset.ready='1';
+    btn.addEventListener('click',async()=>{
+      const email=(document.getElementById('loginUsername')?.value||'').trim();
+      const status=document.getElementById('forgotPasswordStatus');
+      if(!email){status.textContent='Masukkan email akun SeaMart terlebih dahulu.';return;}
+      btn.disabled=true;btn.textContent='Mengirim…';status.textContent='';
+      try{
+        const {error}=await db().auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+        if(error) throw error;
+        status.textContent='Jika email terdaftar, link reset telah dikirim. Periksa Inbox dan Spam.';
+      }catch(error){
+        status.textContent=error.message||'Gagal mengirim link reset. Coba lagi nanti.';
+      }finally{btn.disabled=false;btn.textContent='Lupa Password?';}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initForgotPassword);
+  else initForgotPassword();
   async function loadProducts(){
     if(!storeId) return;
     const sb=db();
