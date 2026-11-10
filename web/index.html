@@ -600,12 +600,9 @@ function renderLabelPreview(){let p=products[Number($('labelProduct').value)];$(
 $('labelProduct').onchange=renderLabelPreview;
 $('printLabels').onclick=()=>{let p=products[Number($('labelProduct').value)],n=Math.max(1,Math.min(100,Number($('labelQty').value)||1));if(!p)return alert('Pilih barang');let html=Array.from({length:n},()=>'<div class="price-label"><b>SeaMart</b><div>'+esc(p.name)+'</div><strong>'+rupiah(p.price)+'</strong><small>'+esc(p.barcode||p.code||'')+'</small></div>').join('');let w=window.open('','_blank','width=600,height=700');if(!w)return alert('Izinkan pop-up untuk mencetak label');w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Label Harga</title><style>@page{margin:5mm}body{font:12px Arial;display:flex;flex-wrap:wrap;gap:4mm}.price-label{width:48mm;min-height:25mm;border:1px dashed #777;padding:3mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;break-inside:avoid}.price-label strong{font-size:18px;margin:3px}.price-label small{font-size:9px}</style></head><body>'+html+'</body></html>');w.document.close();w.focus();w.print()};
 
-// Demo login handlers
-const demoUsers=[{username:'admin',password:'1',role:'Admin'},{username:'kasir',password:'1',role:'Kasir'}];
-function applyLocalSession(){let u=null;try{u=JSON.parse(sessionStorage.getItem('sm_demo_session')||'null')}catch(e){};if(!u){$('loginScreen').hidden=false;$('logoutBtn').hidden=true;$('userBadge').textContent='Belum login';return} $('loginScreen').hidden=true;$('logoutBtn').hidden=false;$('userBadge').textContent=u.username+' • '+u.role;document.querySelectorAll('#nav [data-view]').forEach(b=>b.hidden=u.role==='Kasir'&&b.dataset.view!=='kasir');if(u.role==='Kasir'){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='kasir'));document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view==='kasir'))}}
-$('loginForm').addEventListener('submit',e=>{e.preventDefault();const username=$('loginUsername').value.trim().toLowerCase(),password=$('loginPassword').value;const u=demoUsers.find(x=>x.username===username&&x.password===password);if(!u){$('loginError').textContent='Username atau password salah.';return}sessionStorage.setItem('sm_demo_session',JSON.stringify({username:u.username,role:u.role}));$('loginError').textContent='';applyLocalSession()});
-$('logoutBtn').onclick=()=>{if(window.seamartCloudSignOut)window.seamartCloudSignOut();sessionStorage.removeItem('sm_demo_session');cart=[];renderCart();applyLocalSession()};
-applyLocalSession();
+// Cloud-only session: demo credentials/local login disabled.
+$('logoutBtn').onclick=async()=>{try{if(window.seamartCloudSignOut)await window.seamartCloudSignOut();}finally{sessionStorage.removeItem('sm_demo_session');cart=[];renderCart();$('loginScreen').hidden=false;$('logoutBtn').hidden=true;$('userBadge').textContent='Belum login';}};
+$('loginScreen').hidden=false;$('logoutBtn').hidden=true;$('userBadge').textContent='Belum login';
 refreshStockForms();
 refreshMoveForm();
 
