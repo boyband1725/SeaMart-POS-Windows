@@ -413,6 +413,30 @@ body{background:#f3f6f8}
  .cashier-bill{display:flex!important;flex-direction:column!important}
 }
 
+
+/* SeaMart POS: katalog desktop lebih ramping dan tinggi; area lain tetap */
+@media(min-width:1200px){
+  .cashier-product-panel .product-tiles{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:12px!important;
+    align-content:start!important;
+  }
+  .cashier-product-panel .product-tile{
+    min-height:178px!important;
+    padding:14px 12px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:space-between!important;
+  }
+  .cashier-product-panel .product-tile strong{
+    line-height:1.4!important;
+    min-height:2.8em;
+  }
+}
+@media(min-width:1200px) and (max-width:1500px){
+  .cashier-product-panel .product-tile{min-height:168px!important;padding:12px 10px!important}
+  .cashier-product-panel .product-tile strong{font-size:12px!important}
+}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
