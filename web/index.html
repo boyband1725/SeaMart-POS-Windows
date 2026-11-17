@@ -437,6 +437,88 @@ body{background:#f3f6f8}
   .cashier-product-panel .product-tile{min-height:168px!important;padding:12px 10px!important}
   .cashier-product-panel .product-tile strong{font-size:12px!important}
 }
+
+/* Desktop POS viewport fit: keep cart and keypad inside the monitor */
+@media (min-width:1101px) {
+  html, body {height:100%; min-height:0; overflow:hidden}
+  body:has(#kasir.active) {height:100dvh; overflow:hidden}
+  body:has(#kasir.active) > .layout {
+    height:calc(100dvh - 68px); min-height:0; overflow:hidden;
+  }
+  body:has(#kasir.active) > .layout > aside {
+    min-height:0; height:100%; overflow-y:auto;
+  }
+  body:has(#kasir.active) > .layout > main {
+    height:calc(100dvh - 68px); min-height:0; max-width:none;
+    padding:14px 18px; overflow:hidden; display:flex; flex-direction:column;
+  }
+  #kasir.active {
+    flex:1 1 auto; min-height:0; height:100%;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  #kasir.active > .heading {flex:0 0 auto; margin-bottom:10px}
+  #kasir.active > .cashier-layout {
+    flex:1 1 auto; min-height:0; height:100%;
+    grid-template-columns:minmax(0,7fr) minmax(310px,3fr);
+    gap:12px; align-items:stretch; overflow:hidden;
+  }
+  #kasir.active > .cashier-layout > div:first-child {
+    min-width:0; min-height:0; display:flex; flex-direction:column; overflow:hidden;
+  }
+  #kasir.active .toolbar {flex:0 0 auto; margin-bottom:9px}
+  #kasir.active .cashier-products-area,
+  #kasir.active .cashier-product-panel {
+    min-height:0; min-width:0; overflow-y:auto; overscroll-behavior:contain;
+  }
+  #kasir.active .cashier-products-area {flex:1 1 auto}
+  #kasir.active .cashier-bill {
+    position:static; height:100%; max-height:100%; min-height:0;
+    display:flex; flex-direction:column; overflow:hidden;
+    padding:10px; gap:0;
+  }
+  #kasir.active .bill-head {flex:0 0 auto; min-height:34px}
+  #kasir.active #cartList {
+    flex:1 1 auto; min-height:38px; max-height:none;
+    overflow-y:auto; overscroll-behavior:contain;
+    padding:5px 2px; text-align:left;
+  }
+  #kasir.active #cartList.empty {padding:12px 4px}
+  #kasir.active .cart-row {padding:5px 0; gap:4px}
+  #kasir.active .bill-total {flex:0 0 auto; margin-top:4px; padding:6px 0}
+  #kasir.active .bill-total strong {font-size:18px}
+  #kasir.active .cashier-bill label.sub {flex:0 0 auto; margin-top:4px; font-size:11px}
+  #kasir.active .cashier-bill input:not(.keypad-display) {
+    flex:0 0 auto; min-height:32px!important; height:32px;
+    padding:5px 9px; margin:3px 0 5px!important; font-size:13px;
+  }
+  #kasir.active .payment-methods {flex:0 0 auto; display:flex; gap:6px}
+  #kasir.active .payment-choice {min-height:32px; padding:5px 8px; flex:1}
+  #kasir.active .permanent-keypad {
+    flex:0 0 auto; margin:5px 0; padding:7px;
+    border-radius:9px; box-shadow:none;
+  }
+  #kasir.active .keypad-heading {margin-bottom:5px; font-size:12px}
+  #kasir.active .keypad-tools {gap:5px; margin-bottom:5px}
+  #kasir.active .keypad-tools select {padding:5px 6px; font-size:11px}
+  #kasir.active .keypad-display {
+    height:32px!important; margin:0 0 5px!important;
+    padding:4px 8px!important; font-size:18px!important;
+  }
+  #kasir.active .keypad-grid {gap:4px}
+  #kasir.active .keypad-grid button {min-height:31px; height:31px; font-size:17px; border-radius:7px}
+  #kasir.active .keypad-apply {min-height:31px; height:31px; margin-top:5px; font-size:12px}
+  #kasir.active .cashier-actions {flex:0 0 auto; display:flex; gap:5px; margin-top:5px}
+  #kasir.active .cashier-actions button {min-width:0; min-height:36px; padding:6px 7px; font-size:11px}
+}
+@media (min-width:1101px) and (max-height:720px) {
+  body:has(#kasir.active) > .layout > main {padding-top:8px; padding-bottom:8px}
+  #kasir.active > .heading {margin-bottom:6px}
+  #kasir.active .cashier-bill {padding:7px}
+  #kasir.active .permanent-keypad {padding:5px; margin:3px 0}
+  #kasir.active .keypad-grid button {min-height:27px; height:27px}
+  #kasir.active .keypad-apply {min-height:27px; height:27px}
+}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
