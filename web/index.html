@@ -735,6 +735,56 @@ body{background:#f3f6f8}
   #kasir.active .payment-choice { min-height:36px!important; }
 }
 
+
+/* SeaMart POS — final desktop cashier fit and compact keypad */
+@media screen and (min-width:1101px){
+  html,body{height:100%!important;min-height:0!important;overflow:hidden!important}
+  body:has(#kasir.active){height:100dvh!important;overflow:hidden!important}
+  body:has(#kasir.active)>.layout{height:calc(100dvh - 68px)!important;min-height:0!important;overflow:hidden!important}
+  body:has(#kasir.active)>.layout>main{height:100%!important;min-height:0!important;max-width:none!important;padding:8px 12px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+  #kasir.active{display:flex!important;flex:1 1 0!important;flex-direction:column!important;min-height:0!important;height:100%!important;overflow:hidden!important}
+  #kasir.active>.heading{flex:0 0 auto!important;margin:0 0 6px!important}
+  #kasir.active>.cashier-layout{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(390px,.8fr)!important;gap:10px!important;align-items:stretch!important;flex:1 1 0!important;min-height:0!important;height:100%!important;overflow:hidden!important}
+  #kasir.active>.cashier-layout>div:first-child{display:flex!important;flex-direction:column!important;min-width:0!important;min-height:0!important;overflow:hidden!important}
+  #kasir.active .cashier-products-area{display:flex!important;flex:1 1 0!important;flex-direction:column!important;min-width:0!important;min-height:0!important;overflow:hidden!important}
+  #kasir.active .cashier-product-panel{flex:1 1 0!important;min-height:0!important;overflow:auto!important}
+  #kasir.active .cashier-bill{display:flex!important;flex-direction:column!important;position:static!important;width:100%!important;height:100%!important;max-height:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:8px!important;overflow:hidden!important}
+  #kasir.active .bill-head{flex:0 0 auto!important;padding:8px 10px!important}
+  #kasir.active #cartList{display:block!important;flex:1 1 0!important;min-height:34px!important;max-height:none!important;overflow:auto!important;padding:5px!important;margin:4px 0!important}
+  #kasir.active #cartList.empty{display:flex!important;align-items:center!important;justify-content:center!important}
+  #kasir.active .bill-total{flex:0 0 auto!important;margin:3px 0!important;padding:5px 8px!important}
+  #kasir.active .bill-total strong{font-size:18px!important}
+  #kasir.active .cashier-bill label.sub{flex:0 0 auto!important;margin:3px 0 1px!important;font-size:11px!important}
+  #kasir.active .cashier-bill input:not(.keypad-display){flex:0 0 auto!important;width:100%!important;height:30px!important;min-height:30px!important;margin:2px 0 4px!important;padding:4px 8px!important;font-size:12px!important}
+  #kasir.active .permanent-keypad{order:7!important;flex:0 0 auto!important;width:100%!important;margin:3px 0!important;padding:6px!important;overflow:hidden!important}
+  #kasir.active .keypad-heading{margin:0 0 4px!important;font-size:11px!important}
+  #kasir.active .keypad-tools{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4px!important;margin:0 0 4px!important}
+  #kasir.active .keypad-tools select{min-width:0!important;width:100%!important;height:27px!important;min-height:27px!important;padding:3px 5px!important;font-size:10px!important}
+  #kasir.active .keypad-display{width:100%!important;height:28px!important;min-height:28px!important;margin:0 0 4px!important;padding:3px 7px!important;font-size:16px!important}
+  #kasir.active .keypad-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
+  #kasir.active .keypad-grid button{width:100%!important;height:clamp(25px,3.8vh,34px)!important;min-height:25px!important;padding:2px!important;font-size:16px!important;border-radius:7px!important}
+  #kasir.active .keypad-apply{width:100%!important;height:28px!important;min-height:28px!important;margin:4px 0 0!important;padding:3px!important;font-size:11px!important}
+  #kasir.active .payment-methods{order:8!important;display:flex!important;flex:0 0 auto!important;gap:6px!important;margin:4px 0!important}
+  #kasir.active .payment-choice{flex:1 1 50%!important;min-width:0!important;min-height:38px!important;padding:5px!important;font-size:13px!important}
+  #kasir.active .cashier-actions{order:9!important;display:flex!important;flex:0 0 auto!important;gap:4px!important;margin:3px 0 0!important}
+  #kasir.active .cashier-actions button{min-width:0!important;min-height:34px!important;padding:4px 5px!important;font-size:10px!important}
+}
+@media screen and (min-width:1101px) and (max-height:760px){
+  body:has(#kasir.active)>.layout>main{padding:5px 8px!important}
+  #kasir.active>.heading{margin-bottom:3px!important}
+  #kasir.active .cashier-bill{padding:5px!important}
+  #kasir.active .bill-head{padding:5px 8px!important}
+  #kasir.active .keypad-grid button{height:clamp(23px,3.4vh,28px)!important;min-height:23px!important;font-size:15px!important}
+  #kasir.active .keypad-display{height:25px!important;min-height:25px!important}
+  #kasir.active .payment-choice{min-height:32px!important}
+  #kasir.active .cashier-actions button{min-height:29px!important}
+}
+@media screen and (max-width:1100px){
+  #kasir.active .cashier-bill{max-height:none!important;overflow:visible!important}
+  #kasir.active .permanent-keypad{margin:8px 0!important;padding:9px!important}
+  #kasir.active .keypad-grid button{min-height:40px!important}
+}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
@@ -978,11 +1028,3 @@ $('saveClosing').onclick=()=>{if($('closingActual').value===''||!Number.isFinite
 $('printClosing').onclick=()=>{const d=renderClosing();if(d.actual===null)return alert('Isi uang tunai fisik dan hitung selisih sebelum mencetak.');const rows=[['Penjualan tunai',d.cashSales],['Penjualan QRIS',d.qrisSales],['Total penjualan',d.salesTotal],['Saldo kas awal',d.opening],['Kas masuk lain',d.otherIn],['Kas keluar',d.otherOut],['Kas seharusnya',d.expected],['Kas fisik',d.actual],['Selisih',d.diff]];const w=window.open('','_blank','width=700,height=800');if(!w)return alert('Izinkan pop-up untuk mencetak ringkasan.');w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Ringkasan Tutup Kasir SeaMart</title><style>body{font:14px Arial;color:#17251d;padding:28px}h1{text-align:center;color:#075b38;margin-bottom:4px}.muted{text-align:center;color:#68776e;margin-bottom:24px}table{width:100%;border-collapse:collapse}td{padding:11px;border-bottom:1px solid #ddd}td:last-child{text-align:right;font-weight:bold}.total{background:#eaf7ef;font-weight:bold}.foot{margin-top:28px;display:flex;justify-content:space-between}.sign{width:40%;text-align:center;padding-top:50px;border-top:1px solid #888}</style></head><body><h1>SeaMart POS</h1><div class="muted">RINGKASAN TUTUP KASIR • '+esc(d.day)+'</div><table>'+rows.map((r,i)=>'<tr class="'+([2,6,8].includes(i)?'total':'')+'"><td>'+r[0]+'</td><td>'+rupiah(r[1])+'</td></tr>').join('')+'</table><p>Jumlah transaksi: '+d.transactions+'</p><p>Catatan: '+esc($('closingNote').value||'-')+'</p><div class="foot"><div class="sign">Kasir</div><div class="sign">Pemeriksa / Admin</div></div><script>window.onload=()=>window.print();<\/script></body></html>');w.document.close()};
 document.querySelectorAll('#nav [data-view]').forEach(b=>{if(b.dataset.view==='tutupkasir')b.addEventListener('click',renderClosing)});
 </script></body></html>
-/* Numpad permanen pada panel kasir SeaMart */
-.permanent-keypad{margin:12px 14px 14px;padding:12px;border:1px solid #dce9e0;border-radius:13px;background:#f7fbf8;box-shadow:0 2px 8px #12321a0a}
-.keypad-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;color:#075b38}.keypad-heading span{font-size:11px;color:#62736a}
-.keypad-tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}.keypad-tools select{min-width:0;width:100%;padding:8px;border:1px solid #cbd8d0;border-radius:8px;background:white;font-size:12px}
-.keypad-display{width:100%;height:43px!important;margin:0 0 8px!important;padding:7px 12px!important;text-align:right;font-size:22px!important;font-weight:800!important;background:white!important;border:1px solid #cbd8d0!important;border-radius:9px!important;color:#173d2b!important}
-.keypad-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.keypad-grid button{min-width:0;min-height:45px;border:1px solid #d5dfd9;border-radius:9px;background:white;color:#17251d;font-size:20px;font-weight:800;box-shadow:0 1px 2px #0000000b;cursor:pointer;touch-action:manipulation}.keypad-grid button:active{background:#e5f5e9;transform:translateY(1px)}.keypad-grid .keypad-alt{background:#e9efeb;color:#24583c}.keypad-apply{width:100%;min-height:43px;margin-top:8px;border:0;border-radius:9px;background:#078348;color:white;font-size:14px;font-weight:800;cursor:pointer}
-@media(min-width:981px){.cashier-bill{max-height:none;overflow:visible;overscroll-behavior:auto}.permanent-keypad{position:relative}}
-@media(max-width:980px){.permanent-keypad{margin:10px 0 0}.keypad-grid button{min-height:42px}}
