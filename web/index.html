@@ -519,6 +519,116 @@ body{background:#f3f6f8}
   #kasir.active .keypad-apply {min-height:27px; height:27px}
 }
 
+
+/* SeaMart POS desktop reference layout — final consolidated override */
+@media (min-width:1101px) {
+  html,body{height:100%;min-height:0;overflow:hidden}
+  body:has(#kasir.active){height:100dvh;overflow:hidden}
+  body:has(#kasir.active)>.layout{
+    display:block;height:calc(100dvh - 68px);min-height:0;overflow:hidden
+  }
+  body:has(#kasir.active)>.layout>main{
+    display:flex;flex-direction:column;width:100%;max-width:none;
+    height:100%;min-height:0;margin:0;padding:12px 14px;overflow:hidden
+  }
+  #kasir.active{
+    display:flex;flex:1 1 auto;flex-direction:column;
+    width:100%;height:100%;min-height:0;overflow:hidden
+  }
+  #kasir.active>.heading{flex:0 0 auto;margin:0 0 8px;min-height:24px}
+  #kasir.active>.heading h1{font-size:18px;margin:0}
+  #kasir.active>.heading .sub{display:none}
+  #kasir.active>.cashier-layout{
+    display:grid;grid-template-columns:minmax(0,58fr) minmax(360px,42fr);
+    align-items:stretch;gap:12px;flex:1 1 auto;width:100%;
+    height:100%;min-height:0;overflow:hidden
+  }
+  #kasir.active>.cashier-layout>div:first-child{
+    display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden
+  }
+  #kasir.active .toolbar{display:flex;flex-wrap:nowrap;gap:8px;flex:0 0 auto;margin:0 0 8px}
+  #kasir.active #scan{flex:1 1 auto;width:1%;min-width:0;height:46px;font-size:15px}
+  #kasir.active #addCart{flex:0 0 auto;min-height:46px}
+  #kasir.active .cashier-products-area{
+    display:flex;flex-direction:column;flex:1 1 auto;min-width:0;min-height:0;overflow:hidden
+  }
+  #kasir.active .cashier-category-panel{flex:0 0 auto;min-width:0;overflow:hidden}
+  #kasir.active .cashier-category-panel h3{display:none}
+  #kasir.active #categoryChips{
+    display:flex;flex-wrap:nowrap;gap:6px;max-width:100%;
+    overflow-x:auto;overflow-y:hidden;padding:2px 0 8px
+  }
+  #kasir.active #categoryChips .chip{flex:0 0 auto;padding:9px 13px}
+  #kasir.active .cashier-product-panel{
+    flex:1 1 auto;min-width:0;min-height:0;overflow-y:auto;
+    overflow-x:hidden;overscroll-behavior:contain;padding-right:3px
+  }
+  #kasir.active .product-tiles{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    align-content:start;gap:9px
+  }
+  #kasir.active .product-tile{
+    min-width:0;min-height:0;height:clamp(145px,24vh,205px);
+    padding:10px;overflow:hidden
+  }
+  #kasir.active .product-tile img{
+    width:100%;height:clamp(65px,11vh,105px);object-fit:contain
+  }
+  #kasir.active .product-tile strong{
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+    overflow:hidden;min-height:2.6em;line-height:1.3
+  }
+  #kasir.active .cashier-bill{
+    position:static;display:flex;flex-direction:column;
+    width:100%;height:100%;max-height:100%;min-width:0;min-height:0;
+    overflow:hidden;padding:10px;gap:0
+  }
+  #kasir.active .bill-head{flex:0 0 auto;min-height:42px}
+  #kasir.active .bill-head h2{font-size:18px}
+  #kasir.active #cartList{
+    flex:1 1 auto;min-height:44px;max-height:none;overflow-y:auto;
+    overflow-x:hidden;overscroll-behavior:contain;padding:7px 2px;text-align:left
+  }
+  #kasir.active #cartList.empty{
+    display:flex;align-items:center;justify-content:center;text-align:center
+  }
+  #kasir.active .cart-row{grid-template-columns:minmax(0,1fr) auto;gap:5px;padding:7px 0}
+  #kasir.active .bill-total{flex:0 0 auto;margin:4px 0 0;padding:9px 10px}
+  #kasir.active .bill-total strong{font-size:22px}
+  #kasir.active .cashier-bill label.sub{flex:0 0 auto;margin:5px 0 2px;font-size:11px}
+  #kasir.active .cashier-bill input:not(.keypad-display){
+    flex:0 0 auto;width:100%;height:31px;min-height:31px;
+    padding:4px 8px;margin:2px 0 4px!important;font-size:13px
+  }
+  #kasir.active .payment-methods{order:8;display:flex;flex:0 0 auto;gap:8px;margin-top:7px}
+  #kasir.active .payment-choice{
+    flex:1 1 50%;min-height:54px;padding:8px;font-size:16px;
+    border-radius:10px;font-weight:800
+  }
+  #kasir.active .permanent-keypad{
+    order:7;flex:0 0 auto;margin:5px 0 2px;padding:7px;
+    border-radius:10px;box-shadow:none
+  }
+  #kasir.active .keypad-heading{margin-bottom:5px;font-size:12px}
+  #kasir.active .keypad-tools{gap:5px;margin-bottom:5px}
+  #kasir.active .keypad-tools select{padding:5px 7px;font-size:11px}
+  #kasir.active .keypad-display{height:30px!important;margin:0 0 5px!important;padding:4px 8px!important;font-size:17px!important}
+  #kasir.active .keypad-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  #kasir.active .keypad-grid button{height:clamp(29px,5.2vh,46px);min-height:29px;padding:2px;font-size:19px}
+  #kasir.active .keypad-apply{height:30px;min-height:30px;margin-top:5px;font-size:12px}
+  #kasir.active .cashier-actions{order:9;display:flex;flex:0 0 auto;gap:5px;margin-top:5px}
+  #kasir.active .cashier-actions button{min-width:0;min-height:32px;padding:5px 6px;font-size:10px}
+}
+@media (min-width:1101px) and (max-height:760px){
+  #kasir.active>.cashier-layout{gap:8px}
+  #kasir.active .cashier-bill{padding:7px}
+  #kasir.active .bill-head{min-height:34px}
+  #kasir.active .bill-total{padding:5px 8px}
+  #kasir.active .permanent-keypad{padding:5px;margin:3px 0 1px}
+  #kasir.active .keypad-grid button{height:clamp(26px,4.4vh,36px);min-height:26px}
+  #kasir.active .payment-choice{min-height:43px;font-size:14px}
+}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
