@@ -4,7 +4,7 @@
   const KEY='sb_publishable_Pb_d6PJahuegzMdGVPjeOQ_jw8OQoqV';
   let client=null, storeId=null, syncTimer=null, syncing=false;
   function db(){ if(!window.supabase) throw new Error('Library Supabase belum termuat. Periksa koneksi internet.'); if(!client) client=window.supabase.createClient(URL,KEY); return client; }
-  function setStatus(message){ let el=document.getElementById('cloudStatus'); if(el) el.textContent=message; }
+  function setStatus(message){ ['cloudStatus','syncHeaderStatus'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=message;}); }
   function showPasswordRecovery(){
     const card=document.querySelector('.login-card');
     if(!card||document.getElementById('recoveryForm'))return;
@@ -126,5 +126,5 @@
   };
   window.addEventListener('online',()=>{if(storeId)loadProducts().catch(e=>setStatus('Gagal memuat: '+e.message));});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&storeId)loadProducts().catch(e=>setStatus('Gagal memuat: '+e.message));});
-  window.seamartCloudRefresh=()=>loadProducts().catch(e=>setStatus('Gagal sinkron: '+e.message));
+  window.seamartCloudRefresh=async()=>{try{await loadProducts();return true;}catch(e){setStatus('Gagal sinkron: '+e.message);throw e;}};
 })();
