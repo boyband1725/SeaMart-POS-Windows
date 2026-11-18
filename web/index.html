@@ -880,6 +880,57 @@ body{background:#f3f6f8}
  #kasir.active .keypad-grid button{min-height:clamp(42px,6vh,54px);font-size:23px}
  #kasir.active .cashier-actions #checkout{min-height:62px;font-size:23px}
 }
+
+/* Mobile cashier panel: make the whole cart/payment panel vertically scrollable */
+@media (max-width:700px){
+  .cashier-bill{
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 120px)!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+    padding-bottom:8px!important;
+  }
+  .cashier-bill .bill-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:15!important;
+    background:#fff!important;
+  }
+  .cashier-bill #cartList{
+    max-height:25dvh!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+  }
+  .cashier-bill .cashier-actions{
+    position:sticky!important;
+    bottom:0!important;
+    z-index:20!important;
+    display:flex!important;
+    flex-wrap:wrap!important;
+    background:#fff!important;
+    padding:10px!important;
+    margin:8px -1px 0!important;
+    box-shadow:0 -5px 14px #10251b18!important;
+  }
+  .cashier-bill .cashier-actions #checkout{
+    display:flex!important;
+    flex:1 1 100%!important;
+    order:-1!important;
+    min-height:54px!important;
+    visibility:visible!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-client.js"></script></head>
 <body>
 <div id="loginScreen" class="login-screen"><form class="login-card" id="loginForm"><div class="login-brand"><img class="logo" src="./seamart-logo.jpg" alt="Logo SeaMart"><div><h1>SeaMart POS</h1><div class="sub">Silakan masuk untuk melanjutkan</div></div></div><label>Email<input id="loginUsername" type="email" autocomplete="username" placeholder="Email akun SeaMart" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
